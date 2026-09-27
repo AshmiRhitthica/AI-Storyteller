@@ -1,0 +1,419 @@
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+<title>AI Tales</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --ink:#f2f1ff;
+  --ink-soft:rgba(226,228,255,.78);
+  --edge:rgba(178,196,255,.28);
+  --glow:rgba(140,170,255,.45);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+html,
+body{
+  margin:0;
+  background:#070a1c;
+  overflow-x:hidden;
+}
+
+/* ---------- Background stage ---------- */
+
+.stage{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  min-height:100vh;
+  overflow-x:clip;
+}
+
+.canvas{
+  position:relative;
+  flex:0 0 auto;
+  width:max(100vw, calc(100vh * 1536 / 1024));
+  aspect-ratio:1536 / 1024;
+  background-image:url("ai-tales-bg.png");
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  container-type:size;
+}
+
+/* ---------- The two cards ---------- */
+
+.choices{
+  position:absolute;
+  left:26.8%;
+  top:49.3%;
+  width:41%;
+  height:31.3%;
+  display:flex;
+  gap:1.2%;
+}
+
+.choice{
+  flex:1;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2.4cqh;
+  padding:3cqh 2cqw;
+  font:inherit;
+  color:var(--ink);
+  text-align:center;
+  cursor:pointer;
+  border:1px solid var(--edge);
+  border-radius:1.4cqw;
+  backdrop-filter:blur(9px) saturate(115%);
+  -webkit-backdrop-filter:blur(9px) saturate(115%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 1.2cqh 2.6cqh rgba(4,6,24,.3);
+
+  transition:
+    transform .35s cubic-bezier(.2,.7,.3,1),
+    box-shadow .35s ease,
+    border-color .35s ease;
+}
+
+.choice--paste{
+  background:
+    radial-gradient(
+      120% 90% at 18% 0%,
+      rgba(126,166,255,.18),
+      transparent 62%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(74,110,206,.16) 0%,
+      rgba(46,68,150,.09) 48%,
+      rgba(20,30,80,.04) 100%
+    );
+}
+
+.choice--generate{
+  background:
+    radial-gradient(
+      120% 90% at 18% 0%,
+      rgba(196,158,255,.18),
+      transparent 62%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(150,110,216,.16) 0%,
+      rgba(96,62,170,.09) 48%,
+      rgba(40,22,88,.04) 100%
+    );
+}
+
+/* faint corner sparkles */
+
+.choice::before,
+.choice::after{
+  content:"";
+  position:absolute;
+  width:.35cqw;
+  height:.35cqw;
+  border-radius:50%;
+  background:rgba(232,238,255,.75);
+  box-shadow:0 0 .7cqw .18cqw rgba(200,220,255,.55);
+}
+
+.choice::before{
+  top:1.6cqh;
+  left:1.4cqw;
+}
+
+.choice::after{
+  bottom:2cqh;
+  right:1.6cqw;
+}
+
+.icon{
+  width:4.1cqw;
+  height:4.1cqw;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(206,220,255,.3);
+}
+
+.choice--paste .icon{
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(126,160,242,.7),
+      rgba(48,70,164,.55)
+    );
+}
+
+.choice--generate .icon{
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(184,146,238,.7),
+      rgba(100,58,172,.55)
+    );
+}
+
+.icon svg{
+  width:55%;
+  height:55%;
+  fill:#f4f5ff;
+}
+
+.choice h2{
+  margin:0;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-weight:600;
+  font-size:1.75cqw;
+  letter-spacing:.02em;
+  text-shadow:0 0 1.2cqw rgba(150,180,255,.35);
+}
+
+.choice p{
+  margin:0;
+  max-width:14em;
+  font-family:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight:300;
+  font-size:1cqw;
+  line-height:1.55;
+  color:var(--ink-soft);
+}
+
+.arrow{
+  width:2.7cqw;
+  height:2.7cqw;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(214,226,255,.55);
+  transition:background .3s ease, transform .3s ease;
+}
+
+.arrow svg{
+  width:45%;
+  height:45%;
+  stroke:#eef1ff;
+  stroke-width:2.2;
+  fill:none;
+}
+
+/* ---------- interaction ---------- */
+
+.choice:hover,
+.choice:focus-visible{
+  transform:translateY(-.9cqh);
+  border-color:rgba(206,222,255,.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    0 2.2cqh 4cqh rgba(4,6,24,.5),
+    0 0 3cqw var(--glow);
+}
+
+.choice:focus-visible{
+  outline:2px solid rgba(226,234,255,.9);
+  outline-offset:.4cqw;
+}
+
+.choice:hover .arrow,
+.choice:focus-visible .arrow{
+  background:rgba(226,234,255,.16);
+  transform:translateX(.35cqw);
+}
+
+.choice:active{
+  transform:translateY(-.2cqh) scale(.99);
+}
+
+@media (prefers-reduced-motion:reduce){
+
+  .choice,
+  .arrow{
+    transition:none;
+  }
+
+  .choice:hover,
+  .choice:focus-visible{
+    transform:none;
+  }
+}
+
+/* On narrow screens */
+
+@media (max-width:640px){
+
+  .choices{
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:74vw;
+    height:auto;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .choice{
+    padding:22px 18px;
+    gap:10px;
+    border-radius:18px;
+  }
+
+  .icon{
+    width:52px;
+    height:52px;
+  }
+
+  .choice h2{
+    font-size:22px;
+  }
+
+  .choice p{
+    font-size:13px;
+  }
+
+  .arrow{
+    width:34px;
+    height:34px;
+  }
+
+  .choice::before,
+  .choice::after{
+    width:3px;
+    height:3px;
+    box-shadow:0 0 6px 2px rgba(200,220,255,.5);
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="stage">
+
+  <div class="canvas">
+
+    <div class="choices">
+
+      <button class="choice choice--paste"
+              type="button"
+              data-action="paste">
+
+        <span class="icon" aria-hidden="true">
+
+          <svg viewBox="0 0 24 24">
+            <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V21a1 1 0 1 1-2 0v-3.07A7 7 0 0 1 5 11a1 1 0 1 1 2 0 5 5 0 0 0 10 0z"/>
+          </svg>
+
+        </span>
+
+        <h2>Paste a Story</h2>
+
+        <p>
+          Bring your own story and let AI bring it to life.
+        </p>
+
+        <span class="arrow" aria-hidden="true">
+
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M4 12h15M13 6l6 6-6 6"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+
+        </span>
+
+      </button>
+
+
+      <button class="choice choice--generate"
+              type="button"
+              data-action="generate">
+
+        <span class="icon" aria-hidden="true">
+
+          <svg viewBox="0 0 24 24">
+            <path d="M15.7 5.5l2.8 2.8-9.9 9.9-2.8-2.8 9.9-9.9zm4.9.7l-1.6-1.6a1.2 1.2 0 0 0-1.7 0l-1.2 1.2 3.3 3.3 1.2-1.2a1.2 1.2 0 0 0 0-1.7zM5 3l.7 1.8L7.5 5.5 5.7 6.2 5 8l-.7-1.8L2.5 5.5l1.8-.7L5 3zm14 10l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6.6-1.5z"/>
+          </svg>
+
+        </span>
+
+        <h2>Generate a Story</h2>
+
+        <p>
+          Give an idea and let AI create a story for you.
+        </p>
+
+        <span class="arrow" aria-hidden="true">
+
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M4 12h15M13 6l6 6-6 6"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+
+const routes = {
+
+  paste: "paste.html",
+  generate: "generate.html"
+
+};
+
+document.querySelectorAll(".choice").forEach(card => {
+
+    card.addEventListener("click", () => {
+
+        const action = card.dataset.action;
+
+        window.location.href = routes[action];
+
+    });
+
+});
+</script>
+
+</body>
+
+</html>
+```

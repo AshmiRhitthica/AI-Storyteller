@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Tales — Your Story</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+
+            background:
+                linear-gradient(
+                    rgba(10, 8, 35, 0.58),
+                    rgba(10, 8, 35, 0.72)
+                ),
+                url("ai-tales-bg.png");
+
+            background-size: cover;
+            background-position: center bottom;
+            background-attachment: fixed;
+
+            color: white;
+            padding: 30px 20px;
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            text-shadow:
+                0 0 10px rgba(190, 170, 255, 0.8),
+                0 0 25px rgba(120, 90, 255, 0.5);
+        }
+
+        .tagline {
+            margin-top: 8px;
+
+            font-size: 1rem;
+
+            color: #d8d1ff;
+
+            font-style: italic;
+        }
+
+
+        /* =====================================================
+           MAIN CARD
+        ===================================================== */
+
+        .story-card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(75, 55, 140, 0.38),
+                    rgba(20, 18, 65, 0.55)
+                );
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+
+            border-radius: 24px;
+
+            padding: 40px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.35),
+                inset 0 0 30px rgba(255, 255, 255, 0.03);
+        }
+
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .story-heading {
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+        .story-heading .moon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .story-heading h1 {
+            font-size: 2rem;
+
+            color: #f3edff;
+
+            text-shadow:
+                0 0 12px rgba(190, 170, 255, 0.5);
+        }
+
+
+        /* =====================================================
+           STORY
+        ===================================================== */
+
+        .story-section {
+
+            background: rgba(10, 8, 35, 0.30);
+
+            border-radius: 18px;
+
+            padding: 28px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .section-title {
+
+            font-size: 1.2rem;
+
+            margin-bottom: 18px;
+
+            color: #dcd2ff;
+
+            letter-spacing: 0.5px;
+        }
+
+        #storyText {
+
+            white-space: pre-wrap;
+
+            line-height: 1.9;
+
+            font-size: 1.08rem;
+
+            color: #f4f1ff;
+        }
+
+
+        /* =====================================================
+           CHARACTERS
+        ===================================================== */
+
+        .characters {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+        }
+
+        .character-tag {
+
+            padding: 9px 16px;
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(160, 130, 255, 0.28),
+                    rgba(90, 70, 180, 0.25)
+                );
+
+            border: 1px solid rgba(210, 195, 255, 0.2);
+
+            color: #eee8ff;
+
+            font-size: 0.95rem;
+        }
+
+
+        /* =====================================================
+           AUDIO
+        ===================================================== */
+
+        .audio-section {
+
+            text-align: center;
+
+            padding: 25px;
+
+            margin-top: 10px;
+        }
+
+        .audio-section h2 {
+
+            font-size: 1.3rem;
+
+            margin-bottom: 18px;
+
+            color: #e8e0ff;
+        }
+
+        audio {
+
+            width: 100%;
+
+            max-width: 650px;
+
+            height: 50px;
+
+            border-radius: 30px;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .actions {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            margin-top: 30px;
+        }
+
+        button {
+
+            border: none;
+
+            padding: 13px 24px;
+
+            border-radius: 30px;
+
+            font-size: 0.95rem;
+
+            font-family: inherit;
+
+            cursor: pointer;
+
+            transition: 0.25s ease;
+        }
+
+        .primary-btn {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #9b7cff,
+                    #684bd7
+                );
+
+            color: white;
+
+            box-shadow:
+                0 8px 25px rgba(100, 70, 220, 0.35);
+        }
+
+        .secondary-btn {
+
+            background: rgba(255, 255, 255, 0.09);
+
+            color: #eee8ff;
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+            filter: brightness(1.1);
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .error-message {
+
+            text-align: center;
+
+            color: #ffd1d1;
+
+            font-size: 1rem;
+
+            padding: 30px;
+
+            display: none;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: rgba(230, 225, 255, 0.65);
+
+            font-size: 0.85rem;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 20px 12px;
+            }
+
+            .story-card {
+                padding: 22px;
+            }
+
+            .logo {
+                font-size: 2.2rem;
+            }
+
+            .story-heading h1 {
+                font-size: 1.6rem;
+            }
+
+            .story-section {
+                padding: 20px;
+            }
+
+            #storyText {
+                font-size: 1rem;
+                line-height: 1.75;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <div class="logo">
+            ✦ AI Tales ✦
+        </div>
+
+        <div class="tagline">
+            Chasing stars and casting spells with words.
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         STORY CARD
+    ====================================================== -->
+
+    <main class="story-card">
+
+        <div class="story-heading">
+
+            <div class="moon">
+                🌙
+            </div>
+
+            <h1>
+                Your Tale Has Come to Life
+            </h1>
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        <div
+            id="errorMessage"
+            class="error-message"
+        >
+            Something went wrong while loading your story.
+        </div>
+
+
+        <!-- STORY -->
+
+        <section
+            id="storySection"
+            class="story-section"
+        >
+
+            <h2 class="section-title">
+                📖 Your Story
+            </h2>
+
+            <div id="storyText">
+                Loading your story...
+            </div>
+
+        </section>
+
+
+        <!-- CHARACTERS -->
+
+        <section
+            id="charactersSection"
+            class="story-section"
+        >
+
+            <h2 class="section-title">
+                ✨ Characters
+            </h2>
+
+            <div
+                id="characters"
+                class="characters"
+            >
+            </div>
+
+        </section>
+
+
+        <!-- AUDIO -->
+
+        <section class="story-section audio-section">
+
+            <h2>
+                🎙️ Listen to Your Tale
+            </h2>
+
+            <audio
+                id="storyAudio"
+                controls
+            >
+                Your browser does not support audio playback.
+            </audio>
+
+        </section>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <button
+                class="primary-btn"
+                onclick="createAnotherStory()"
+            >
+                ✨ Create Another Story
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="goHome()"
+            >
+                🏠 Back to Home
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+        Made with ✦ AI Tales
+    </footer>
+
+</div>
+
+
+<script>
+
+    /* =====================================================
+       CONFIGURATION
+    ===================================================== */
+
+    const API_URL = "http://127.0.0.1:8000";
+
+
+    /* =====================================================
+       LOAD RESULT
+    ===================================================== */
+
+    function loadResult() {
+
+        const storedResult =
+            localStorage.getItem("aiTalesResult");
+
+
+        if (!storedResult) {
+
+            showError(
+                "No story was found. Please create a story first."
+            );
+
+            return;
+        }
+
+
+        let result;
+
+
+        try {
+
+            result = JSON.parse(storedResult);
+
+        } catch (error) {
+
+            console.error(
+                "Could not read stored result:",
+                error
+            );
+
+            showError(
+                "The story result could not be loaded."
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "AI Tales Result:",
+            result
+        );
+
+
+        /* =================================================
+           STORY
+        ================================================= */
+
+        const storyText =
+            document.getElementById("storyText");
+
+        storyText.textContent =
+            result.story || "No story available.";
+
+
+        /* =================================================
+           CHARACTERS
+        ================================================= */
+
+        const charactersContainer =
+            document.getElementById("characters");
+
+        charactersContainer.innerHTML = "";
+
+
+        if (
+            result.characters &&
+            result.characters.length > 0
+        ) {
+
+            result.characters.forEach(character => {
+
+                const tag =
+                    document.createElement("div");
+
+                tag.className =
+                    "character-tag";
+
+
+                const name =
+                    character.name || "Unknown";
+
+
+                const gender =
+                    character.gender;
+
+
+                if (gender) {
+
+                    tag.textContent =
+                        `${name} · ${gender}`;
+
+                } else {
+
+                    tag.textContent =
+                        name;
+                }
+
+
+                charactersContainer.appendChild(tag);
+
+            });
+
+        } else {
+
+            charactersContainer.innerHTML =
+                `<div class="character-tag">
+                    No characters detected
+                </div>`;
+        }
+
+
+        /* =================================================
+           AUDIO
+        ================================================= */
+
+        const audio =
+            document.getElementById("storyAudio");
+
+
+        if (result.audio_url) {
+
+            audio.src =
+                `${API_URL}${result.audio_url}`;
+
+        } else {
+
+            audio.style.display = "none";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    function showError(message) {
+
+        document.getElementById(
+            "storySection"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "charactersSection"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "errorMessage"
+        ).textContent = message;
+
+
+        document.getElementById(
+            "errorMessage"
+        ).style.display = "block";
+
+    }
+
+
+    /* =====================================================
+       CREATE ANOTHER STORY
+    ===================================================== */
+
+    function createAnotherStory() {
+
+        localStorage.removeItem(
+            "aiTalesResult"
+        );
+
+        window.location.href =
+            "index.html";
+
+    }
+
+
+    /* =====================================================
+       HOME
+    ===================================================== */
+
+    function goHome() {
+
+        window.location.href =
+            "index.html";
+
+    }
+
+
+
+    loadResult();
+
+</script>
+
+</body>
+
+</html>

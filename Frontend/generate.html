@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Tales — Generate a Story</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family: Georgia, "Times New Roman", serif;
+
+            background:
+                linear-gradient(
+                    rgba(10, 8, 35, 0.58),
+                    rgba(10, 8, 35, 0.72)
+                ),
+                url("ai-tales-bg.png");
+
+            background-size: cover;
+
+            /* Keep the upper logo artwork out of focus */
+            background-position: center bottom;
+
+            background-attachment: fixed;
+
+            color: white;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px 20px;
+        }
+
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 850px;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .logo {
+
+            font-size: 2.7rem;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            text-shadow:
+                0 0 10px rgba(190, 170, 255, 0.8),
+                0 0 25px rgba(120, 90, 255, 0.5);
+        }
+
+
+        .tagline {
+
+            margin-top: 8px;
+
+            color: #d8d1ff;
+
+            font-style: italic;
+        }
+
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(75, 55, 140, 0.38),
+                    rgba(20, 18, 65, 0.55)
+                );
+
+            backdrop-filter: blur(18px);
+
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+
+            border-radius: 24px;
+
+            padding: 40px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.35),
+                inset 0 0 30px rgba(255, 255, 255, 0.03);
+        }
+
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .title {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .title .icon {
+
+            font-size: 2rem;
+
+            margin-bottom: 8px;
+        }
+
+
+        .title h1 {
+
+            font-size: 1.8rem;
+
+            color: #f3edff;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        label {
+
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #e5ddff;
+
+            font-size: 0.95rem;
+        }
+
+
+        textarea,
+        select {
+
+            width: 100%;
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            background: rgba(8, 7, 30, 0.35);
+
+            color: white;
+
+            border-radius: 14px;
+
+            font-family: inherit;
+
+            outline: none;
+
+            transition: 0.2s ease;
+        }
+
+
+        textarea {
+
+            min-height: 170px;
+
+            resize: vertical;
+
+            padding: 16px;
+
+            font-size: 1rem;
+
+            line-height: 1.6;
+
+            margin-bottom: 22px;
+        }
+
+
+        select {
+
+            padding: 13px 14px;
+
+            font-size: 0.95rem;
+        }
+
+
+        textarea:focus,
+        select:focus {
+
+            border-color: rgba(190, 170, 255, 0.65);
+
+            box-shadow:
+                0 0 15px rgba(130, 100, 240, 0.18);
+        }
+
+
+        select option {
+
+            background: #171332;
+
+            color: white;
+        }
+
+
+        /* =====================================================
+           SETTINGS
+        ===================================================== */
+
+        .settings {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+        }
+
+
+        button {
+
+            border: none;
+
+            border-radius: 30px;
+
+            padding: 13px 25px;
+
+            font-family: inherit;
+
+            font-size: 0.95rem;
+
+            cursor: pointer;
+
+            transition: 0.25s ease;
+        }
+
+
+        .generate-btn {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #9b7cff,
+                    #684bd7
+                );
+
+            color: white;
+
+            box-shadow:
+                0 8px 25px rgba(100, 70, 220, 0.35);
+        }
+
+
+        .clear-btn {
+
+            background: rgba(255, 255, 255, 0.08);
+
+            color: #eee8ff;
+
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+            filter: brightness(1.1);
+        }
+
+
+        button:disabled {
+
+            opacity: 0.6;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        #statusText {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            min-height: 24px;
+
+            color: #dcd2ff;
+
+            font-size: 0.95rem;
+
+            font-style: italic;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .card {
+
+                padding: 25px;
+            }
+
+
+            .settings {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .logo {
+
+                font-size: 2.2rem;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="header">
+
+        <div class="logo">
+            ✦ AI Tales ✦
+        </div>
+
+        <div class="tagline">
+            Chasing stars and casting spells with words.
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+
+        <div class="title">
+
+            <div class="icon">
+                ✨
+            </div>
+
+            <h1>
+                Create a New Tale
+            </h1>
+
+        </div>
+
+
+        <label for="promptInput">
+            What should your story be about?
+        </label>
+
+
+        <textarea
+            id="promptInput"
+            placeholder="A young girl discovers a mysterious door hidden inside her grandmother's house..."
+        ></textarea>
+
+
+        <div class="settings">
+
+
+            <div>
+
+                <label for="genre">
+                    Genre
+                </label>
+
+                <select id="genre">
+
+                    <option value="Fantasy">
+                        Fantasy
+                    </option>
+
+                    <option value="Adventure">
+                        Adventure
+                    </option>
+
+                    <option value="Romance">
+                        Romance
+                    </option>
+
+                    <option value="Mystery">
+                        Mystery
+                    </option>
+
+                    <option value="Science Fiction">
+                        Science Fiction
+                    </option>
+
+                    <option value="Horror">
+                        Horror
+                    </option>
+
+                    <option value="Fairy Tale">
+                        Fairy Tale
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="length">
+                    Story Length
+                </label>
+
+                <select id="length">
+
+                    <option value="Short">
+                        Short
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="Long">
+                        Long
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                id="clearBtn"
+                class="clear-btn"
+            >
+                Clear
+            </button>
+
+
+            <button
+                id="generateBtn"
+                class="generate-btn"
+            >
+
+                <span id="generateText">
+                    ✨ Generate Story
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <p id="statusText"></p>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+    /* =====================================================
+       CONFIGURATION
+    ===================================================== */
+
+    const API_URL =
+        "http://127.0.0.1:8000";
+
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const promptInput =
+        document.getElementById("promptInput");
+
+    const genre =
+        document.getElementById("genre");
+
+    const length =
+        document.getElementById("length");
+
+    const clearBtn =
+        document.getElementById("clearBtn");
+
+    const generateBtn =
+        document.getElementById("generateBtn");
+
+    const generateText =
+        document.getElementById("generateText");
+
+    const statusText =
+        document.getElementById("statusText");
+
+
+    /* =====================================================
+       CLEAR
+    ===================================================== */
+
+    clearBtn.addEventListener(
+        "click",
+        function () {
+
+            promptInput.value = "";
+
+            genre.value = "Fantasy";
+
+            length.value = "Short";
+
+            statusText.textContent = "";
+
+            promptInput.focus();
+
+        }
+    );
+
+
+    /* =====================================================
+       GENERATE STORY
+    ===================================================== */
+
+    generateBtn.addEventListener(
+        "click",
+        async function () {
+
+            const prompt =
+                promptInput.value.trim();
+
+
+            if (!prompt) {
+
+                alert(
+                    "Please tell AI Tales what your story should be about."
+                );
+
+                promptInput.focus();
+
+                return;
+            }
+
+
+            generateBtn.disabled = true;
+
+            clearBtn.disabled = true;
+
+            generateText.textContent =
+                "✨ Creating your tale...";
+
+            statusText.textContent =
+                "Gemini is writing your story. Then AI Tales will bring it to life with voices...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/generate-story`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                prompt: prompt,
+
+                                genre: genre.value,
+
+                                length: length.value
+
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.detail ||
+                        "Story generation failed."
+                    );
+
+                }
+
+
+                console.log(
+                    "AI Tales generated story:",
+                    data
+                );
+
+
+                localStorage.setItem(
+                    "aiTalesResult",
+                    JSON.stringify(data)
+                );
+
+
+                statusText.textContent =
+                    "Your tale is ready! ✨";
+
+
+                window.location.href =
+                    "result.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "AI Tales generation error:",
+                    error
+                );
+
+
+                statusText.textContent =
+                    "Something went wrong while creating your tale.";
+
+
+                alert(
+                    "AI Tales could not generate the story.\n\n" +
+                    error.message
+                );
+
+
+                generateBtn.disabled = false;
+
+                clearBtn.disabled = false;
+
+                generateText.textContent =
+                    "✨ Generate Story";
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
