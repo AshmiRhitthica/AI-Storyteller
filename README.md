@@ -6,7 +6,7 @@
 
 ## 📖 About the Project
 
-AI Storyteller is a personal GenAI project that I started because I wanted to explore something beyond a typical chatbot or text-generation application.
+AI Tales is a personal GenAI project that I started because I wanted to explore something beyond a typical chatbot or text-generation application.
 
 I wanted to build something where an AI-generated story could actually feel like a **story being told**, rather than just text appearing on a screen.
 
@@ -16,7 +16,7 @@ The idea was simple:
 
 What started as an interesting idea turned into a project where I spent a lot of time understanding how the different parts of an AI application can work together.
 
-The project currently supports the backend pipeline for:
+The project combines a web interface with an AI-powered backend that handles:
 
 - AI story generation
 - Story parsing
@@ -25,8 +25,6 @@ The project currently supports the backend pipeline for:
 - Character-to-voice mapping
 - Text-to-Speech generation
 - Combining narration and dialogue into a complete audio story
-
-The interface will be developed separately as a web project.
 
 ---
 
@@ -93,7 +91,63 @@ The current pipeline looks like this:
                     ▼
             Final Story Audio
 ```
+# 🎨 Frontend
 
+The AI Tales frontend is a browser-based interface designed around a **dreamy fantasy storytelling experience**.
+
+### Frontend Features
+
+- Magical fantasy-themed landing page
+- Generate a story from a prompt
+- Paste and process an existing story
+- Genre selection
+- Story length selection
+- Generated story display
+- Character information display
+- Final audio player
+- Navigation between story creation and results
+
+### Frontend Technologies
+
+- HTML5
+- CSS3
+- JavaScript
+- Local Storage
+- Fetch API
+- Responsive UI design
+
+The frontend communicates with the FastAPI backend through HTTP API endpoints.
+
+---
+
+# 🖥️ Frontend Flow
+
+```text
+                    AI Tales Website
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+        Generate a Story          Paste a Story
+              │                         │
+              ▼                         ▼
+       /generate-story            /process-story
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                       FastAPI
+                           │
+                           ▼
+                    AI Story Pipeline
+                           │
+                           ▼
+                    Final Story Audio
+                           │
+                           ▼
+                     Result Page
+                           │
+                           ▼
+                       Audio Player
+```
 # 🔧 Technologies Used
 
 ### Generative AI
@@ -154,7 +208,42 @@ Kokoro Generates Speech
        ↓
 final_story.wav
 ```
-
+# 🧩 Full Project Architecture
+                    ┌─────────────────────┐
+                    │      AI Tales       │
+                    │      Frontend       │
+                    └──────────┬──────────┘
+                               │
+                         HTTP Requests
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │       FastAPI       │
+                    │       Backend       │
+                    └──────────┬──────────┘
+                               │
+              ┌────────────────┴────────────────┐
+              │                                 │
+              ▼                                 ▼
+       Story Generation                   Story Processing
+              │                                 │
+           Gemini                        Story Parser
+                                                │
+                                                ▼
+                                      Character Profiles
+                                                │
+                                                ▼
+                                         Voice Mapping
+                                                │
+                                                ▼
+                                          Kokoro TTS
+                                                │
+                                                ▼
+                                        Final Audio File
+                                                │
+                                                ▼
+                                         AI Tales UI
+                                         
 # 💡 What I Learned From Building This
 
 This project taught me much more than just how to call an AI API.
